@@ -1,0 +1,47 @@
+name: Setup Prerequisites
+description: Install and validate required system tools
+
+runs:
+  using: composite
+
+  steps:
+    - name: Setup prerequisites
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        echo "[INFO] Runner OS information"
+        source /etc/os-release || true
+        echo "[INFO] OS: ${PRETTY_NAME:-unknown}"
+
+        HAS_SUDO="false"
+        if sudo -n true >/dev/null 2>&1; then
+          HAS_SUDO="true"
+          echo "[INFO] Sudo access detected."
+        else
+          echo "[INFO] Sudo access not detected."
+        fi
+
+        REQUIRED_COMMANDS=(curl jq git python3 sed awk grep)
+        MISSING_PACKAGES=()
+
+        for cmd in "${REQUIRED_COMMANDS[@]}"; do
+          if command -v "$cmd" >/dev/null 2>&1; then
+            echo "[INFO] $cmd detected"
+          else
+            echo "[WARN] $cmd is missing"
+            MISSING_PACKAGES+=("$cmd")
+          fi
+        done
+
+        if [[ "${#MISSING_PACKAGES[@]}" -gt 0 ]]; then
+          if [[ "$HAS_SUDO" == "true" ]]; then
+            echo "[INFO] Installing missing packages: ${MISSING_PACKAGES[*]}"
+            sudo apt-get update -y
+            sudo apt-get install -y "${MISSING_PACKAGES[@]}"
+          else
+            echo "[ERROR] Missing packages and sudo access is not available:"
+            printf ' - %s\n' "${MISSING_PACKAGES[@]}"
+            exit 1
+          fi
+        fi
