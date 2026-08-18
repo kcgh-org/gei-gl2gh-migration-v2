@@ -1,0 +1,2 @@
+group-path,group-name,project,url,last-commit-date,repo-size-in-bytes,attachments-size-in-bytes,is-archived,mr-count,github_org,github_repo,gh_repo_visibility
+"gitlab-group","gitlab-group","gitlab-project","https://gitlab.com/gitlab-group/gitlab-project","2026-08-14 09:06 AM","3851","0","False",0,gh-org,gh-repo,private
