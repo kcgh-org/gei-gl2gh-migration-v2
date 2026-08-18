@@ -1,0 +1,85 @@
+name: Setup GitHub CLI
+description: Install, authenticate and configure GitHub CLI
+
+inputs:
+  gh-pat:
+    required: true
+
+  github-api-url:
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Setup GitHub CLI
+      shell: bash
+      env:
+        GH_PAT: ${{ inputs.gh-pat }}
+        TARGET_GITHUB_API_URL: ${{ inputs.github-api-url }}
+      run: |
+        set -euo pipefail
+
+        HAS_SUDO="false"
+        if sudo -n true >/dev/null 2>&1; then
+          HAS_SUDO="true"
+        fi
+
+        if command -v gh >/dev/null 2>&1; then
+          echo "[INFO] GitHub CLI detected: $(gh --version | head -n1)"
+        else
+          if [[ "$HAS_SUDO" == "true" ]]; then
+
+            echo "[INFO] Installing GitHub CLI..."
+
+            sudo mkdir -p -m 755 /etc/apt/keyrings
+
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
+              sudo dd of=/etc/apt/keyrings/githubcli-archive-keyring.gpg
+
+            sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | \
+              sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+
+            sudo apt-get update -y
+            sudo apt-get install -y gh
+
+          else
+            echo "[ERROR] GitHub CLI is missing and sudo access is unavailable."
+            exit 1
+          fi
+        fi
+
+        [[ -n "${GH_PAT:-}" ]] || {
+          echo "[ERROR] GH_PAT is required"
+          exit 1
+        }
+
+        if [[ "$TARGET_GITHUB_API_URL" =~ ^https://api\.github\.com/?$ ]]; then
+          GH_HOST="github.com"
+        else
+          GH_HOST="$(echo "$TARGET_GITHUB_API_URL" | sed -E 's#^https://api\.##; s#/$##')"
+        fi
+
+        echo "[INFO] GH_HOST=$GH_HOST"
+
+        unset GH_TOKEN
+
+        echo "$GH_PAT" | gh auth login \
+          --with-token \
+          --hostname "$GH_HOST" \
+          || true
+
+        gh auth status --hostname "$GH_HOST"
+
+        if gh extension list | grep -q "gh-gl2gh"; then
+          echo "[INFO] Upgrading gh-gl2gh extension..."
+          gh extension upgrade gh-gl2gh || true
+        else
+          echo "[INFO] Installing gh-gl2gh extension..."
+          gh extension install https://github.com/github/gh-gl2gh
+        fi
+
+        echo "[INFO] Installed GitHub CLI extensions:"
+        gh extension list
