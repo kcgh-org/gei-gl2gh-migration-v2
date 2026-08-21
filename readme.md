@@ -368,6 +368,7 @@ GitHub repository → Settings → Environments → New environment
 | Variable | Description |
 |---|---|
 | `GITLAB_SERVER_URL` | GitLab server URL. Defaults to `https://gitlab.com` if not configured |
+| `TARGET_GITHUB_API_URL` | Required when using GitHub Enterprise Cloud with Data Residency |
 | `STORAGE_TYPE` | Storage type. Supported values: `GITHUB`, `AZURE`, `AWS`. Defaults to `GITHUB` |
 | `TARGET_UPLOAD_URL` | Optional. When using GitHub Enterprise Cloud with Data Residency and GitHub storage, the workflow automatically derives the upload URL from `TARGET_GITHUB_API_URL` if not configured |
 | `AWS_BUCKET_NAME` | Required when using AWS storage |
@@ -520,7 +521,6 @@ Provide the required workflow inputs.
 
 | Input | Description |
 |---|---|
-| `TARGET_GITHUB_API_URL` | GitHub API URL. Use `https://api.github.com` for GitHub Enterprise Cloud or `https://api.SUBDOMAIN.ghe.com` for GitHub Enterprise Cloud with Data Residency |
 | `ENVIRONMENT_NAME` | GitHub Environment containing migration secrets and variables. Default: `gl2gh-migration-secrets` |
 | `INVENTORY_FILE` | Inventory CSV file name. Default: `projects.csv` |
 | `APPROVAL_ENVIRONMENT_NAME` | GitHub Environment used for manual approval. Default: `gl2gh-migration-approvers` |
