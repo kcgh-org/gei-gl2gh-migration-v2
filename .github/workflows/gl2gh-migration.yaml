@@ -674,6 +674,18 @@ jobs:
 
           export GITHUB_API_URL="${TARGET_GITHUB_API_URL}"
           echo "GH API URL is: $GITHUB_API_URL"
+          
+          # ✅ Authenticate to GitHub host
+          unset GH_TOKEN
+          export TARGET_GITHUB_API_URL="${TARGET_GITHUB_API_URL:-}"
+          if [[ -n "${TARGET_GITHUB_API_URL:-}" ]]; then
+              GH_HOST="$(echo "$TARGET_GITHUB_API_URL" | sed -E 's#https://api\.##')"
+              echo "$GH_PAT" | gh auth login --with-token --hostname "$GH_HOST"
+          else
+              echo "$GH_PAT" | gh auth login --with-token
+          fi
+          gh auth status
+          
           ./3_post_migration_validation.sh 2>&1 | tee 3_post_migration_validation.out
 
       - name: Publish validation summary
