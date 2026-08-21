@@ -1,2 +1,2 @@
 group-path,group-name,project,url,last-commit-date,repo-size-in-bytes,attachments-size-in-bytes,is-archived,mr-count,github_org,github_repo,gh_repo_visibility
-"migration-demo-group","migration-demo-group","AI-Chatbot","http://gitlabpoc.eastus.cloudapp.azure.com/migration-demo-group/AI-Chatbot","2026-08-14 09:06 AM","3851","0","False",0,kcghorgz,ai-chatbot-20260820-z2a,private
+"pauljaison-group","pauljaison-group","dopamine","https://gitlab.com/pauljaison-group/dopamine","2026-08-11 03:13 PM","250011891","0","False",1,kcghorgz,dopamine-20260820-1za2b,private
