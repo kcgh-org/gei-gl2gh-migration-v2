@@ -22,7 +22,7 @@ runs:
           echo "[INFO] Sudo access not detected."
         fi
 
-        REQUIRED_COMMANDS=(curl jq git python3 sed awk grep)
+        REQUIRED_COMMANDS=(curl jq git sed awk grep)
         MISSING_PACKAGES=()
 
         for cmd in "${REQUIRED_COMMANDS[@]}"; do

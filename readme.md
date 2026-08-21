@@ -217,10 +217,6 @@ Required tools:
 curl
 jq
 git
-python3
-sed
-awk
-grep
 gh
 ```
 

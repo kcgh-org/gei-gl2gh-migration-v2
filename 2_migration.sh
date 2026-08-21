@@ -146,7 +146,6 @@ require_cmd gh
 require_cmd sed
 require_cmd awk
 require_cmd grep
-require_cmd python3
 
 require_env GITLAB_PAT
 require_env GH_PAT
