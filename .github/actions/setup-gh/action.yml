@@ -20,6 +20,8 @@ runs:
       run: |
         set -euo pipefail
 
+        TARGET_GITHUB_API_URL="${TARGET_GITHUB_API_URL:-https://api.github.com}"
+
         HAS_SUDO="false"
         if sudo -n true >/dev/null 2>&1; then
           HAS_SUDO="true"
