@@ -3,12 +3,6 @@ name: GitLab to GitHub Migration Pipeline
 on:
   workflow_dispatch:
     inputs:
-      TARGET_GITHUB_API_URL:
-        description: "GitHub API URL. Use https://api.github.com for GHEC, or DR API URL for GitHub Data Residency."
-        type: string
-        default: "https://api.github.com"
-        required: true
-
       ENVIRONMENT_NAME:
         description: "GitHub Environment name containing migration secrets"
         type: string
@@ -86,7 +80,7 @@ jobs:
       GITLAB_PAT: ${{ secrets.GITLAB_PAT }}
       INVENTORY_FILE: ${{ inputs.INVENTORY_FILE }}
 
-      TARGET_GITHUB_API_URL: ${{ inputs.TARGET_GITHUB_API_URL }}
+      TARGET_GITHUB_API_URL: ${{ vars.TARGET_GITHUB_API_URL }}
       GH_PAT: ${{ secrets.GH_PAT }}
 
       STORAGE_TYPE: ${{ vars.STORAGE_TYPE }}
@@ -159,9 +153,9 @@ jobs:
           echo "--------------------------"
 
           if [[ -n "${TARGET_GITHUB_API_URL:-}" ]]; then
-            print_ok "TARGET_GITHUB_API_URL is provided: ${TARGET_GITHUB_API_URL}"
+            print_ok "TARGET_GITHUB_API_URL variable is configured: ${TARGET_GITHUB_API_URL}"
           else
-            print_fail "TARGET_GITHUB_API_URL is required"
+            print_fail "TARGET_GITHUB_API_URL GitHub variable is not configured"
           fi
 
           if [[ -n "${INVENTORY_FILE:-}" ]]; then
@@ -528,7 +522,7 @@ jobs:
       GITLAB_PAT: ${{ secrets.GITLAB_PAT }}
       INVENTORY_FILE: ${{ inputs.INVENTORY_FILE }}
 
-      TARGET_GITHUB_API_URL: ${{ inputs.TARGET_GITHUB_API_URL }}
+      TARGET_GITHUB_API_URL: ${{ vars.TARGET_GITHUB_API_URL }}
       GH_PAT: ${{ secrets.GH_PAT }}
       GH_TOKEN: ${{ secrets.GH_PAT }}
 
@@ -553,7 +547,7 @@ jobs:
       - uses: ./.github/actions/setup-gh
         with:
           gh-pat: ${{ secrets.GH_PAT }}
-          github-api-url: ${{ inputs.TARGET_GITHUB_API_URL }}
+          github-api-url: ${{ vars.TARGET_GITHUB_API_URL }}
 
       - name: Run repository migration
         shell: bash
@@ -636,7 +630,7 @@ jobs:
       GITLAB_SERVER_URL: ${{ vars.GITLAB_SERVER_URL }}
       GITLAB_PAT: ${{ secrets.GITLAB_PAT }}
 
-      TARGET_GITHUB_API_URL: ${{ inputs.TARGET_GITHUB_API_URL }}
+      TARGET_GITHUB_API_URL: ${{ vars.TARGET_GITHUB_API_URL }}
       GH_PAT: ${{ secrets.GH_PAT }}
       GH_TOKEN: ${{ secrets.GH_PAT }}
 
@@ -651,7 +645,7 @@ jobs:
       - uses: ./.github/actions/setup-gh
         with:
           gh-pat: ${{ secrets.GH_PAT }}
-          github-api-url: ${{ inputs.TARGET_GITHUB_API_URL }}
+          github-api-url: ${{ vars.TARGET_GITHUB_API_URL }}
 
       - name: Download migration artifacts
         uses: actions/download-artifact@v6
