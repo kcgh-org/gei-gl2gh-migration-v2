@@ -75,7 +75,7 @@ runs:
 
         gh auth status --hostname "$GH_HOST"
 
-        if gh extension list | grep -q "gh-gl2gh"; then
+        if gh extension list | grep -i "gh-gl2gh"; then
           echo "[INFO] Upgrading gh-gl2gh extension..."
           gh extension upgrade gh-gl2gh || true
         else
