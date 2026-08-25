@@ -472,7 +472,7 @@ jobs:
     timeout-minutes: 1440
     needs: 
       - migration-readiness-check
-    if: ${{ inputs.RUN_MIGRATION_READINESS == 'true' && inputs.RUN_MIGRATION == 'true' }}
+    if: ${{ inputs.RUN_MIGRATION_READINESS == 'true' }}
     environment:
       name: ${{ inputs.APPROVAL_ENVIRONMENT_NAME }}
 
@@ -509,7 +509,14 @@ jobs:
       - env-validation
       - migration-readiness-check
       - approval-stage
-    if: ${{ always() && inputs.RUN_MIGRATION == 'true' && needs.env-validation.result == 'success' && (inputs.RUN_MIGRATION_READINESS == 'false' || needs.approval-stage.result == 'success') }}
+    if: ${{ 
+            always() &&
+            needs.env-validation.result == 'success' &&
+            (
+              inputs.RUN_MIGRATION_READINESS == 'false' ||
+              needs.approval-stage.result == 'success'
+            )
+        }}
     env:
       GITLAB_SERVER_URL: ${{ vars.GITLAB_SERVER_URL }}
       GITLAB_PAT: ${{ secrets.GITLAB_PAT }}
