@@ -24,19 +24,19 @@ This workflow orchestrates a structured GitLab-to-GitHub migration process using
 
 ### Key Features
 
-- **Parallel Repository Migration**  
-  Repository migrations are executed in parallel to improve throughput while remaining within the configured concurrency limit.
-
 - **Manual Approval Gate**  
   When readiness validation is enabled, the workflow pauses after the readiness stage and requires user approval before migration begins.
 
+- **Parallel Repository Migration**  
+  Repository migrations are executed in parallel to improve throughput while remaining within the configured concurrency limit.
+  
 - **Migration Status Tracking**  
   The migration stage generates `repos_with_status.csv`, which tracks successful and failed migrations and is used by downstream validation stages.
 
 - **Post-Migration Validation**  
   Post-migration validation runs automatically after successful migration and validates repositories that migrated successfully.
 
-- **Flexible Storage Support**  
+- **Flexible Intermediate Storage Support**  
   Supports GitHub Storage, Azure Storage, and AWS Storage.
 
 - **GitHub Enterprise Cloud and Data Residency Support**  
@@ -124,7 +124,7 @@ Responsibilities:
 - Supports parallel repository migration
 - Generates per-repository migration logs
 - Tracks migration status
-- Generates `output_files/migration/repos_with_status.csv`
+- Generates `output_files/2_migration/repos_with_status.csv`
 
 This file is used by post-migration validation.
 
@@ -152,8 +152,8 @@ If a repository has more than the configured branch validation threshold, valida
 Generated outputs:
 
 ```text
-output_files/post_migration_validation/validation-summary_<timestamp>.csv
-output_files/post_migration_validation/validation-summary_<timestamp>.md
+output_files/3_post_migration_validation/validation-summary_<timestamp>.csv
+output_files/3_post_migration_validation/validation-summary_<timestamp>.md
 ```
 
 ---
@@ -186,6 +186,8 @@ GitHub Actions does not support unlimited timeout. For large migration batches, 
 ### Migration Size Limits
 
 Refer to the latest GitHub Enterprise Importer documentation for supported migration limits and repository size constraints.
+
+Reference: [Understand migrations from GitLab to GitHub](https://docs.github.com/en/migrations/using-github-enterprise-importer/migrate-from-gitlab/understand-migrations)
 
 ---
 
