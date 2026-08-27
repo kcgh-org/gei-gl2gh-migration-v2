@@ -472,9 +472,9 @@ Review the workflow inputs if customization is required. Default values are prov
 
 | Input | Description |
 |---|---|
-| `Environment name` | GitHub Environment containing migration secrets and variables. Default: `gl2gh-migration-secrets` |
-| `Inventory file` | Inventory CSV file name. Default: `projects.csv` |
-| `Approval Environment name` | GitHub Environment used for manual approval. Default: `gl2gh-migration-approvers` |
+| `Environment with Secrets and Variables` | GitHub Environment containing migration secrets and variables. Default: `gl2gh-migration-secrets` |
+| `Inventory CSV file` | Inventory CSV file name. Default: `projects.csv` |
+| `Approval environment` | GitHub Environment used for manual approval. Default: `gl2gh-migration-approvers` |
 | `Use Self-Hosted Runner` | Set to `true` to use a self-hosted runner. Default: `false` |
 | `Self-Hosted Runner Label` | Runner label to use when self-hosted runner is enabled |
 | `Run migration readiness check` | Set to `true` to run readiness check and approval before migration. Default: `true` |
