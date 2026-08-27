@@ -405,11 +405,8 @@ Before starting your first migration:
 
 Generate the inventory and update repository mappings as described in:
 
-- 5️⃣ Inventory Preparation
-- 6️⃣ Update `projects.csv`
-
-- [5️⃣ Inventory Preparation](#5️⃣-prepare-inventory)
-- [6️⃣ Update `projects.csv`](#6️⃣-update-inventory)
+- [Prepare Inventory](#5️⃣-prepare-inventory)
+- [Update Inventory](#6️⃣-update-inventory)
 
 ---
 
