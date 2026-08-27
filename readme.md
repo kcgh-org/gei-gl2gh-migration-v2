@@ -73,7 +73,6 @@ Performs validation checks for:
 
 - Required secrets
 - Required variables
-- GitHub API URL
 - Inventory file availability
 - Inventory file headers
 - Storage configuration
@@ -124,7 +123,7 @@ Responsibilities:
 - Supports parallel repository migration
 - Generates per-repository migration logs
 - Tracks migration status
-- Generates `output_files/2_migration/repos_with_status.csv`
+- Generates `output_files/migration/repos_with_status.csv`
 
 This file is used by post-migration validation.
 
@@ -152,8 +151,8 @@ If a repository has more than the configured branch validation threshold, valida
 Generated outputs:
 
 ```text
-output_files/3_post_migration_validation/validation-summary_<timestamp>.csv
-output_files/3_post_migration_validation/validation-summary_<timestamp>.md
+output_files/post_migration_validation/validation-summary_<timestamp>.csv
+output_files/post_migration_validation/validation-summary_<timestamp>.md
 ```
 
 ---
@@ -260,10 +259,10 @@ The GitHub token is used to:
 Recommended scopes:
 
 ```text
-repo
-admin:org
+repo (full control)
 workflow
-user
+admin:org (full control)
+user (read access)
 ```
 
 If the migration user is not a GitHub organization owner, a GitHub organization owner must grant the migrator role before migration.
@@ -279,18 +278,13 @@ Generate the inventory using `gh gl2gh inventory-report`.
 Example for all accessible projects:
 
 ```bash
-gh gl2gh inventory-report \
-  --gitlab-server-url <GITLAB_SERVER_URL> \
-  --gitlab-pat <GITLAB_PAT>
+gh gl2gh inventory-report --gitlab-server-url <GITLAB_SERVER_URL> --gitlab-pat <GITLAB_PAT>
 ```
 
 Example for a specific GitLab group:
 
 ```bash
-gh gl2gh inventory-report \
-  --gitlab-server-url <GITLAB_SERVER_URL> \
-  --gitlab-pat <GITLAB_PAT> \
-  --gitlab-group <GITLAB_GROUP>
+gh gl2gh inventory-report --gitlab-server-url <GITLAB_SERVER_URL> --gitlab-pat <GITLAB_PAT> --gitlab-group <GITLAB_GROUP>
 ```
 
 This generates inventory files such as:
@@ -331,7 +325,7 @@ By default, the workflow expects:
 projects.csv
 ```
 
-You can provide a different file name using the `INVENTORY_FILE` workflow input.
+You can provide a different file name using the `Inventory file` workflow input.
 
 ---
 
@@ -369,25 +363,12 @@ GitHub repository → Settings → Environments → New environment
 | Variable | Description |
 |---|---|
 | `GITLAB_SERVER_URL` | GitLab server URL. Defaults to `https://gitlab.com` if not configured |
-| `TARGET_GITHUB_API_URL` | Required when using GitHub Enterprise Cloud with Data Residency |
+| `TARGET_GITHUB_API_URL` | Required for GitHub Enterprise Cloud with Data Residency (Example: `https://api.SUBDOMAIN.ghe.com):
+| `TARGET_GITHUB_API_URL` | Required when using GitHub Enterprise Cloud with Data Residency. If not configured, the workflow automatically derives `https://uploads.SUBDOMAIN.ghe.com` |
 | `STORAGE_TYPE` | Storage type. Supported values: `GITHUB`, `AZURE`, `AWS`. Defaults to `GITHUB` |
 | `TARGET_UPLOAD_URL` | Optional. When using GitHub Enterprise Cloud with Data Residency and GitHub storage, the workflow automatically derives the upload URL from `TARGET_GITHUB_API_URL` if not configured |
 | `AWS_BUCKET_NAME` | Required when using AWS storage |
 | `AWS_REGION` | Required when using AWS storage |
-
-Example for GitHub Enterprise Cloud with Data Residency:
-
-```text
-TARGET_GITHUB_API_URL=https://api.contoso.ghe.com
-```
-
-If `TARGET_UPLOAD_URL` is not configured, the workflow automatically derives:
-
-```text
-https://uploads.contoso.ghe.com
-```
-
-If `TARGET_UPLOAD_URL` is configured, the configured value is used instead.
 
 ---
 
@@ -420,46 +401,13 @@ Before starting your first migration:
 
 ---
 
-### Step 1 - Generate Inventory
+### Step 1 - Generate Inventory and Update Inventory
 
-```bash
-gh gl2gh inventory-report \
-  --gitlab-server-url <GITLAB_SERVER_URL> \
-  --gitlab-pat <GITLAB_PAT>
-```
-
-For a specific GitLab group:
-
-```bash
-gh gl2gh inventory-report \
-  --gitlab-server-url <GITLAB_SERVER_URL> \
-  --gitlab-pat <GITLAB_PAT> \
-  --gitlab-group <GITLAB_GROUP>
-```
+#Generate inventory and update inventory as mentioned in [### 5️⃣ Inventory Preparation] and [### 6️⃣ Update `projects.csv`]
 
 ---
 
-### Step 2 - Update Repository Mappings
-
-Update the following columns in `projects.csv`:
-
-```text
-github_org
-github_repo
-gh_repo_visibility
-```
-
-Example:
-
-```csv
-group-path,project,url,github_org,github_repo,gh_repo_visibility
-platform,api-service,https://gitlab.com/platform/api-service,my-github-org,api-service,private
-platform,web-frontend,https://gitlab.com/platform/web-frontend,my-github-org,web-frontend,private
-```
-
----
-
-### Step 3 - Commit Inventory File
+### Step 2 - Commit Inventory File
 
 Commit the updated inventory file to the repository containing this workflow.
 
@@ -522,12 +470,12 @@ Review the workflow inputs if customization is required. Default values are prov
 
 | Input | Description |
 |---|---|
-| `ENVIRONMENT_NAME` | GitHub Environment containing migration secrets and variables. Default: `gl2gh-migration-secrets` |
-| `INVENTORY_FILE` | Inventory CSV file name. Default: `projects.csv` |
-| `APPROVAL_ENVIRONMENT_NAME` | GitHub Environment used for manual approval. Default: `gl2gh-migration-approvers` |
-| `USE_SELF_HOSTED_RUNNER` | Set to `true` to use a self-hosted runner. Default: `false` |
-| `SELF_HOSTED_RUNNER_LABEL` | Runner label to use when self-hosted runner is enabled |
-| `RUN_MIGRATION_READINESS` | Set to `true` to run readiness check and approval before migration. Default: `true` |
+| `Environment name` | GitHub Environment containing migration secrets and variables. Default: `gl2gh-migration-secrets` |
+| `Inventory file` | Inventory CSV file name. Default: `projects.csv` |
+| `Approval Environment name` | GitHub Environment used for manual approval. Default: `gl2gh-migration-approvers` |
+| `Use Self-Hosted Runner` | Set to `true` to use a self-hosted runner. Default: `false` |
+| `Self-Hosted Runner Label` | Runner label to use when self-hosted runner is enabled |
+| `Run migration readiness check` | Set to `true` to run readiness check and approval before migration. Default: `true` |
 
 ---
 
@@ -658,26 +606,17 @@ gh gl2gh generate-mannequin-csv --github-org "<github-org>"
 ```
 
 ```bash
-gh gl2gh reclaim-mannequin \
-  --github-org "<github-org>" \
-  --csv mannequins.csv \
-  --skip-invitation
+gh gl2gh reclaim-mannequin --github-org "<github-org>" --csv mannequins.csv --skip-invitation
 ```
 
 ### GitHub Enterprise Cloud with Data Residency
 
 ```bash
-gh gl2gh generate-mannequin-csv \
-  --github-org "<github-org>" \
-  --target-api-url https://api.SUBDOMAIN.ghe.com
+gh gl2gh generate-mannequin-csv --github-org "<github-org>" --target-api-url https://api.SUBDOMAIN.ghe.com
 ```
 
 ```bash
-gh gl2gh reclaim-mannequin \
-  --github-org "<github-org>" \
-  --csv mannequins.csv \
-  --skip-invitation \
-  --target-api-url https://api.SUBDOMAIN.ghe.com
+gh gl2gh reclaim-mannequin --github-org "<github-org>" --csv mannequins.csv --skip-invitation --target-api-url https://api.SUBDOMAIN.ghe.com
 ```
 
 ---
@@ -699,7 +638,7 @@ Best practices:
 
 ### Q2: Can I skip the readiness check?
 
-**A:** Yes. Set `RUN_MIGRATION_READINESS=false`.
+**A:** Yes. Set `Run migration readiness check=false`.
 
 When readiness is skipped:
 
@@ -756,9 +695,7 @@ GITHUB
 
 ### Q6: Do I need to configure `TARGET_UPLOAD_URL` for GitHub Enterprise Cloud with Data Residency?
 
-**A:** No, it is optional.
-
-If it is not configured, the workflow derives it from `TARGET_GITHUB_API_URL`.
+**A:** No, If it is not configured, the workflow derives it from `TARGET_GITHUB_API_URL`.
 
 Example:
 
@@ -783,8 +720,8 @@ If `TARGET_UPLOAD_URL` is configured, the workflow uses the configured value.
 Set:
 
 ```text
-USE_SELF_HOSTED_RUNNER=true
-SELF_HOSTED_RUNNER_LABEL=<runner-label>
+Use Self-Hosted Runner=true
+Self-Hosted Runner Label=<runner-label>
 ```
 
 ---
@@ -913,9 +850,7 @@ gh gl2gh abort-migration --migration-id "<migration-id>"
 For Data Residency:
 
 ```bash
-gh gl2gh abort-migration \
-  --migration-id "<migration-id>" \
-  --target-api-url https://api.SUBDOMAIN.ghe.com
+gh gl2gh abort-migration --migration-id "<migration-id>" --target-api-url https://api.SUBDOMAIN.ghe.com
 ```
 
 ---
