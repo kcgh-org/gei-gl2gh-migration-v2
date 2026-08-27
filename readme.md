@@ -364,9 +364,8 @@ GitHub repository → Settings → Environments → New environment
 |---|---|
 | `GITLAB_SERVER_URL` | GitLab server URL. Defaults to `https://gitlab.com` if not configured |
 | `TARGET_GITHUB_API_URL` | Required when using GitHub Enterprise Cloud with Data Residency. Example: https://api.SUBDOMAIN.ghe.com |
-| `TARGET_UPLOAD_URL` | Required when using GitHub Enterprise Cloud with Data Residency and GitHub storage, the workflow automatically derives the upload URL from TARGET_GITHUB_API_URL if not configured |
 | `STORAGE_TYPE` | Storage type. Supported values: `GITHUB`, `AZURE`, `AWS`. Defaults to `GITHUB` |
-| `TARGET_UPLOAD_URL` | Optional. When using GitHub Enterprise Cloud with Data Residency and GitHub storage, the workflow automatically derives the upload URL from `TARGET_GITHUB_API_URL` if not configured |
+| `TARGET_UPLOAD_URL` | Required when using GitHub Enterprise Cloud with Data Residency and GitHub storage, the workflow automatically derives the upload URL from TARGET_GITHUB_API_URL if not configured |
 | `AWS_BUCKET_NAME` | Required when using AWS storage |
 | `AWS_REGION` | Required when using AWS storage |
 
