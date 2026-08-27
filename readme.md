@@ -408,6 +408,9 @@ Generate the inventory and update repository mappings as described in:
 - 5️⃣ Inventory Preparation
 - 6️⃣ Update `projects.csv`
 
+- [#5️⃣ Inventory Preparation](Inventory Preparation)
+- [#6️⃣ Update `projects.csv`](Update Inventory)
+
 ---
 
 ### Step 2 - Commit Inventory File
