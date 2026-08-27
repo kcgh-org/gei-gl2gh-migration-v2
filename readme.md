@@ -408,8 +408,8 @@ Generate the inventory and update repository mappings as described in:
 - 5️⃣ Inventory Preparation
 - 6️⃣ Update `projects.csv`
 
-- [5️⃣ Inventory Preparation](#5️⃣ Inventory Preparation)
-- [6️⃣ Update `projects.csv`](#6️⃣ Update `projects.csv)
+- [5️⃣ Inventory Preparation](#5️⃣-Inventory-Preparation)
+- [6️⃣ Update `projects.csv`](#6️⃣-Update-`projects.csv)
 
 ---
 
