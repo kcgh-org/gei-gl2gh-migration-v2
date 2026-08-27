@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       ENVIRONMENT_NAME:
-        description: "Environment containing migration secrets and variables"
+        description: "Environment with Secrets and Variables"
         type: string
         default: "gl2gh-migration-secrets"
         required: false
