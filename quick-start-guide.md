@@ -1,13 +1,31 @@
 # 🚀 Quick Start: Your First Migration
 
+## Generate PAT Tokens
+
+GitLab PAT token recommended scopes:
+
+```text
+read_api
+api
+```
+
+GitHub PAT token recommended scopes:
+
+```text
+repo (full control)
+workflow
+admin:org (full control)
+user (read access)
+```
+> Note:
+> If the migration user is not a GitHub organization owner, a GitHub organization owner must grant the migrator role before migration.
+
 ## Workflow configuration and execution
 
 ### Step 1 - Generate and Update Inventory
  - Generate inventory:
 ```bash
-gh gl2gh inventory-report \
-  --gitlab-server-url <GITLAB_SERVER_URL> \
-  --gitlab-pat <GITLAB_PAT>
+gh gl2gh inventory-report --gitlab-server-url <GITLAB_SERVER_URL> --gitlab-pat <GITLAB_PAT>
 ```
  - Update `projects.csv` with the following required columns:
    
@@ -37,9 +55,12 @@ projects.csv
 ### Step 4 - Create GitHub Environments
  - Create two GitHub Environments:
 ```text
-gl2gh-migration-secrets
 gl2gh-migration-approvers
+gl2gh-migration-secrets
 ```
+
+Configure required reviewers in the `gl2gh-migration-approvers` environment.
+
 ---
 
 ### Step 5 - Configure secrets and variables
@@ -59,9 +80,9 @@ gl2gh-migration-approvers
 | Variable | Description |
 |---|---|
 | `GITLAB_SERVER_URL` | GitLab server URL. Defaults to `https://gitlab.com` if not configured |
-| `TARGET_GITHUB_API_URL` | Required when using GitHub Enterprise Cloud with Data Residency |
-| `STORAGE_TYPE` | Storage type. Supported values: `GITHUB`, `AZURE`, `AWS`. Defaults to `GITHUB` if not configured |
-| `TARGET_UPLOAD_URL` | Optional. When using GitHub Enterprise Cloud with Data Residency and GitHub storage, the workflow automatically derives the upload URL from `TARGET_GITHUB_API_URL` if not configured |
+| `TARGET_GITHUB_API_URL` | Required when using GitHub Enterprise Cloud with Data Residency. Example: https://api.SUBDOMAIN.ghe.com |
+| `STORAGE_TYPE` | Storage type. Supported values: `GITHUB`, `AZURE`, `AWS`. Defaults to `GITHUB` |
+| `TARGET_UPLOAD_URL` | Required when using GitHub Enterprise Cloud with Data Residency and GitHub storage, the workflow automatically derives the upload URL from TARGET_GITHUB_API_URL if not configured |
 | `AWS_BUCKET_NAME` | Required when using AWS storage |
 | `AWS_REGION` | Required when using AWS storage |
 
@@ -76,17 +97,16 @@ Actions → GitLab to GitHub Migration Pipeline
 Run workflow
 ```
 
- - Provide:
-   
+ - Review and update workflow inputs only if customization is required. Default values are provided for all inputs:
+
 | Input | Description |
 |---|---|
-| `ENVIRONMENT_NAME` | GitHub Environment containing migration secrets and variables. Default: `gl2gh-migration-secrets` |
-| `INVENTORY_FILE` | Inventory CSV file name. Default: `projects.csv` |
-| `APPROVAL_ENVIRONMENT_NAME` | GitHub Environment used for manual approval. Default: `gl2gh-migration-approvers` |
-| `USE_SELF_HOSTED_RUNNER` | Set to `true` to use a self-hosted runner. Default: `false` |
-| `SELF_HOSTED_RUNNER_LABEL` | Runner label to use when self-hosted runner is enabled |
-| `RUN_MIGRATION_READINESS` | Set to `true` to run readiness check and approval before migration. Default: `true` |
-| `RUN_MIGRATION` | Set to `true` to run repository migration and post-migration validation. Default: `true` |
+| `Environment with Secrets and Variables` | GitHub Environment containing migration secrets and variables. Default: `gl2gh-migration-secrets` |
+| `Inventory CSV file` | Inventory CSV file name. Default: `projects.csv` |
+| `Approval environment` | GitHub Environment used for manual approval. Default: `gl2gh-migration-approvers` |
+| `Use Self-Hosted Runner` | Set to `true` to use a self-hosted runner. Default: `false` |
+| `Self-Hosted Runner Label` | Runner label to use when self-hosted runner is enabled |
+| `Run migration readiness check` | Set to `true` to run readiness check and approval before migration. Default: `true` |
 
 ---
 
