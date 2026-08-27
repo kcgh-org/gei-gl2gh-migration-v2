@@ -271,7 +271,7 @@ If the target GitHub organization uses SAML SSO enforcement, authorize the GitHu
 
 ---
 
-### 5️⃣ Inventory Preparation
+### 5️⃣ Prepare Inventory
 
 Generate the inventory using `gh gl2gh inventory-report`.
 
@@ -296,7 +296,7 @@ projects.csv
 
 ---
 
-### 6️⃣ Update `projects.csv`
+### 6️⃣ Update Inventory
 
 Before running the workflow, update `projects.csv` with the following required columns:
 
@@ -408,8 +408,8 @@ Generate the inventory and update repository mappings as described in:
 - 5️⃣ Inventory Preparation
 - 6️⃣ Update `projects.csv`
 
-- [5️⃣ Inventory Preparation](#5️⃣-Inventory-Preparation)
-- [6️⃣ Update `projects.csv`](#6️⃣-Update-`projects.csv)
+- [5️⃣ Inventory Preparation](#5️⃣-prepare-inventory)
+- [6️⃣ Update `projects.csv`](#6️⃣-update-inventory)
 
 ---
 
