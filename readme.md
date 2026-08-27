@@ -363,8 +363,8 @@ GitHub repository → Settings → Environments → New environment
 | Variable | Description |
 |---|---|
 | `GITLAB_SERVER_URL` | GitLab server URL. Defaults to `https://gitlab.com` if not configured |
-| `TARGET_GITHUB_API_URL` | Required for GitHub Enterprise Cloud with Data Residency (Example: `https://api.SUBDOMAIN.ghe.com):
-| `TARGET_GITHUB_API_URL` | Required when using GitHub Enterprise Cloud with Data Residency. If not configured, the workflow automatically derives `https://uploads.SUBDOMAIN.ghe.com` |
+| `TARGET_GITHUB_API_URL` | Required when using GitHub Enterprise Cloud with Data Residency. Example: https://api.SUBDOMAIN.ghe.com |
+| `TARGET_UPLOAD_URL` | Required when using GitHub Enterprise Cloud with Data Residency and GitHub storage, the workflow automatically derives the upload URL from TARGET_GITHUB_API_URL if not configured |
 | `STORAGE_TYPE` | Storage type. Supported values: `GITHUB`, `AZURE`, `AWS`. Defaults to `GITHUB` |
 | `TARGET_UPLOAD_URL` | Optional. When using GitHub Enterprise Cloud with Data Residency and GitHub storage, the workflow automatically derives the upload URL from `TARGET_GITHUB_API_URL` if not configured |
 | `AWS_BUCKET_NAME` | Required when using AWS storage |
@@ -403,7 +403,10 @@ Before starting your first migration:
 
 ### Step 1 - Generate Inventory and Update Inventory
 
-#Generate inventory and update inventory as mentioned in [### 5️⃣ Inventory Preparation] and [### 6️⃣ Update `projects.csv`]
+Generate the inventory and update repository mappings as described in:
+
+- 5️⃣ Inventory Preparation
+- 6️⃣ Update `projects.csv`
 
 ---
 
